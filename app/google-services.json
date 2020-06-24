@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "395271228029",
+    "firebase_url": "https://sems-app.firebaseio.com",
+    "project_id": "sems-app",
+    "storage_bucket": "sems-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:395271228029:android:7afc5ea6625412a92ebf14",
+        "android_client_info": {
+          "package_name": "lk.sliit.sems_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "395271228029-hkqgodr39b91nclcmuj9fp5lsei39tlo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lk.sliit.sems_app",
+            "certificate_hash": "0957d4f604271b493f21ff2d2b151fb3d59b5d77"
+          }
+        },
+        {
+          "client_id": "395271228029-3fqjdlje15upuiqo6r5p7n0je5jlbqt7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYW2JDCv1RgUCjHPFtEgc_q82rSMC6q60"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "395271228029-3fqjdlje15upuiqo6r5p7n0je5jlbqt7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
