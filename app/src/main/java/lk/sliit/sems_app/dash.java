@@ -14,6 +14,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONObject;
+
 public class dash extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();;
@@ -43,7 +45,7 @@ public class dash extends AppCompatActivity {
         databaseReferenceUnits.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String units = dataSnapshot.getValue(String.class);
+                JSONObject units = dataSnapshot.getValue(JSONObject.class);
 
             }
 
