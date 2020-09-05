@@ -10,16 +10,41 @@
     android:background="#fcfcfc"
     android:gravity="center"
     android:id="@+id/ll">
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/upic"
+        android:layout_width="175dp"
+        android:layout_height="94dp"
+        android:layout_marginBottom="20dp"
+        app:civ_border_width="2dp"
+        app:civ_shadow="true" />
+
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/sno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_margin="20dp"
+        android:textStyle="bold"/>
+
+
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/bankcardId"
-            android:layout_width="340dp"
+            android:layout_width="160dp"
             android:layout_height="190dp"
             android:layout_margin="10dp"
             android:clickable="true"
@@ -29,21 +54,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
+                android:onClick="goForecastView"
                 android:orientation="vertical">
 
-                <com.mikhaellopez.circularimageview.CircularImageView
-                    android:id="@+id/upic"
-                    android:layout_width="94dp"
-                    android:layout_height="94dp"
-                    app:civ_border_width="2dp"
-                    app:civ_shadow="true" />
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:background="@drawable/cercleshapepink"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_power_white" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="90dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:id="@+id/name"
-                    android:text="Name"
+                    android:text="Unit Forecast"
                     android:textStyle="bold" />
 
                 <View
@@ -57,66 +82,18 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:text="Check and change your profile"
+                    android:text="Predict Next Month Bill"
                     android:textColor="@android:color/darker_gray" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-    </LinearLayout>
-    <LinearLayout
-        android:clipToPadding="false"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
         <androidx.cardview.widget.CardView
-            android:foreground="?android:attr/selectableItemBackground"
-            android:clickable="true"
             android:layout_width="160dp"
             android:layout_height="190dp"
-            android:layout_margin="10dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:background="@drawable/cercleshapepink"
-                    android:src="@drawable/ic_power_white"
-                    android:padding="10dp"/>
-
-                <TextView
-                    android:layout_width="74dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Next Bill ?"
-                    android:textStyle="bold" />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/lightgray"
-                    android:layout_margin="10dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Predict Next Month Bill"
-                    android:padding="5dp"
-                    android:textColor="@android:color/darker_gray"/>
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-        <androidx.cardview.widget.CardView
-            android:foreground="?android:attr/selectableItemBackground"
+            android:layout_margin="10dp"
             android:clickable="true"
-            android:layout_width="160dp"
-            android:layout_height="190dp"
-            android:layout_margin="10dp">
+            android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -128,8 +105,8 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:background="@drawable/cercleshapepink"
-                    android:src="@drawable/ic_home_white"
-                    android:padding="10dp" />
+                    android:padding="10dp"
+                    android:src="@drawable/ic_home_white" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -190,7 +167,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="60dp"
-                    android:text="unit1"
+                    android:text=""
                     android:textStyle="bold" />
 
                 <TextView
@@ -198,7 +175,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="unit2"
+                    android:text=""
                     android:textStyle="bold" />
 
                 <TextView
@@ -207,7 +184,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginLeft="60dp"
-                    android:text="unit3"
+                    android:text=""
                     android:textStyle="bold" />
 
             </LinearLayout>

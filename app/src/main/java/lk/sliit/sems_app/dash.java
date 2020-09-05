@@ -3,10 +3,12 @@ package lk.sliit.sems_app;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,14 +29,18 @@ public class dash extends AppCompatActivity {
     public FirebaseDatabase firebaseDatabase;
     public DatabaseReference databaseReference;
     public DatabaseReference databaseReferenceUnits;
+    public DatabaseReference databaseReference2;
+    public DatabaseReference databaseReferencecode;
     public String proPic;
     public String name;
     public String uid;
     public FirebaseAuth mAuth;
+    public Boolean isPaired;
     private TextView uni1;
     private TextView uni2;
     private TextView uni3;
     private TextView uname;
+    private TextView snumber;
     private ImageView userPic;
 
     @Override
@@ -46,6 +52,7 @@ public class dash extends AppCompatActivity {
         uni2=findViewById(R.id.unit2);
         uni3=findViewById(R.id.unit3);
         uname=findViewById(R.id.name);
+        snumber=findViewById(R.id.sno);
         userPic=(ImageView)findViewById(R.id.upic);
 
 
@@ -71,11 +78,14 @@ public class dash extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 live units = dataSnapshot.getValue(live.class);
-                Log.d(TAG, "units:" + units.getCol1());
-
-                uni1.setText("Unit1 : " + Long.toString(units.getCol7()));
-                uni2.setText("Unit2 : " +Long.toString(units.getCol8()));
-                uni3.setText("Unit3 : " +Long.toString(units.getCol9()));
+                if(units.col10 != null) {
+                    snumber.setText(units.getCol10());
+                    uni1.setText("Unit1 : " + Long.toString(units.getCol7()));
+                    uni2.setText("Unit2 : " + Long.toString(units.getCol8()));
+                    uni3.setText("Unit3 : " + Long.toString(units.getCol9()));
+                }else{
+                    goFirstTimeActivity();
+                }
             }
 
             @Override
@@ -85,5 +95,18 @@ public class dash extends AppCompatActivity {
 
         });
 
+
     }
+
+    public void goForecastView(View view){
+        Intent forecast=new Intent(this, forcast.class);
+        startActivity(forecast);
+    }
+
+    public void goFirstTimeActivity(){
+        Intent first=new Intent(this, first.class);
+        startActivity(first);
+        finish();
+    }
+
 }
