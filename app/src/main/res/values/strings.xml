@@ -1,3 +1,58 @@
 <resources>
     <string name="app_name">SEMS-app</string>
+
+    <string-array name="basicArray">
+        <item>None</item>
+        <item>One</item>
+        <item>Two</item>
+        <item>Three</item>
+        <item>Four</item>
+        <item>Five or more</item>
+    </string-array>
+
+    <string-array name="yesnoArray">
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+
+    <string-array name="incomeArray">
+        <item>Below Rs. 50,000 </item>
+        <item>Between Rs. 50,000 and Rs. 100,000</item>
+        <item>Between Rs. 100,000 and Rs. 200,000</item>
+        <item>Between Rs. 200,000 and Rs. 300,000</item>
+        <item>Between Rs. 300,000 and Rs.400,000</item>
+        <item>Above Rs. 400,00</item>
+    </string-array>
+
+    <string-array name="sizeArray">
+        <item>Less than 1,500 square feet</item>
+        <item>1,500 to 2,500 square feet</item>
+        <item>2,500 to 3,500 square feet </item>
+        <item>3,500 to 4,500 square feet</item>
+        <item>More than 4,500 square feet </item>
+    </string-array>
+
+
+    <string-array name="districArray">
+        <item>Colombo</item>
+        <item>Gampaha</item>
+        <item>Kaluthara</item>
+        <item>Hambantota</item>
+        <item>Kandy</item>
+        <item>Kurunegala</item>
+        <item>Kegalle</item>
+        <item>Puttalam</item>
+        <item>Anuradhapura</item>
+        <item>Matara</item>
+        <item>Trincomalee</item>
+        <item>Galle</item>
+        <item>Ratnapura</item>
+        <item>Jaffna</item>
+        <item>Nuwara Eliya</item>
+        <item>Batticaloa</item>
+        <item>Badulla</item>
+        <item>Matale</item>
+    </string-array>
+
+
 </resources>

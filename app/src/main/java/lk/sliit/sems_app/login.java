@@ -44,6 +44,24 @@ public class login extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
+    }
+
+    private void updateUI(FirebaseUser user) {
+        if(user == null){
+            //code when there is no user
+        }else {
+            Intent intent=new Intent(this, dash.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
 
     public void goGoogleSignIn(View view) {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();

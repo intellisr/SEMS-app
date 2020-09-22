@@ -78,7 +78,7 @@ public class dash extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 live units = dataSnapshot.getValue(live.class);
-                if(units.col10 != null) {
+                if(units != null) {
                     snumber.setText(units.getCol10());
                     uni1.setText("Unit1 : " + Long.toString(units.getCol7()));
                     uni2.setText("Unit2 : " + Long.toString(units.getCol8()));
@@ -102,6 +102,12 @@ public class dash extends AppCompatActivity {
         Intent forecast=new Intent(this, forcast.class);
         startActivity(forecast);
     }
+
+    public void goPowerProfilingview(View view){
+        Intent forecast=new Intent(this, powerpro.class);
+        startActivity(forecast);
+    }
+
 
     public void goFirstTimeActivity(){
         Intent first=new Intent(this, first.class);
