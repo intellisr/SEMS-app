@@ -4,16 +4,25 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.apptakk.http_request.HttpRequest;
+import com.apptakk.http_request.HttpRequestTask;
+import com.apptakk.http_request.HttpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -40,6 +49,8 @@ public class powerpro extends AppCompatActivity {
     public DatabaseReference databaseReference;
     public DatabaseReference databaseReferencechild;
     public String uid;
+    public String response;
+    public String payload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,22 +171,27 @@ public class powerpro extends AppCompatActivity {
         databaseReference = firebaseDatabase.getReference("Home");
         databaseReferencechild = databaseReference.child(uid);
         databaseReferencechild.setValue(myhome);
+        //payload="{ \'solar\':\'"+solar+"\',\'male\':\'"+maleCount+"\',\'female\':\'"+femaleCount+"\',\'child:\'"+childCount+"\',adult:"+adultCount+",emp:"+empCount+",income:"+income+",district:"+district+",size:"+size+",aircon:"+Aircon+",fan:"+Fan+",oven:"+Oven+",micro:"+Microwaves+",refig:"+Refrigerators+",car:"+Car+",geys:"+Geysers+"}";
+        new HttpRequestTask(
+                new HttpRequest("http://13.59.11.87:5000/predict_Profile", HttpRequest.POST, "{ \'solar\':\'"+solar+"\',\'male\':\'"+maleCount+"\',\'female\':\'"+femaleCount+"\',\'child:\'"+childCount+"\'}"),
+                new HttpRequest.Handler() {
+                    @Override
+                    public void response(HttpResponse response) {
+                        if (response.code == 200) {
+                            Log.d(this.getClass().toString(), "Request successful!");
+                        } else {
+                            Log.e(this.getClass().toString(), "Request unsuccessful: " + response);
+                        }
+                    }
+                }).execute();
 
-        String payload="{ solar:"+solar+",male:"+maleCount+",female:"+femaleCount+",child:"+childCount+",adult:"+adultCount+",emp:"+empCount+",income:"+income+",district:"+district+",size:"+size+",aircon:"+Aircon+",fan:"+Fan+",oven:"+Oven+",micro:"+Microwaves+",refig:"+Refrigerators+",car:"+Car+",geys:"+Geysers+"}";
-        try {
-            String response = makePostRequest("http://www.example.com", "{ exampleObject: \"name\" }", getApplicationContext());
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
 
-
-        String result="result is " + Geysers;
+        String result="result is " + response;
         Toast.makeText(powerpro.this, result,
                 Toast.LENGTH_SHORT).show();
     }
 
-    public static String makePostRequest(String stringUrl, String payload,
-                                         Context context) throws IOException {
+    public static String makePostRequest(String stringUrl, String payload) throws IOException {
         URL url = new URL(stringUrl);
         HttpURLConnection uc = (HttpURLConnection) url.openConnection();
         String line;
@@ -201,4 +217,6 @@ public class powerpro extends AppCompatActivity {
         uc.disconnect();
         return jsonString.toString();
     }
+
+
 }
