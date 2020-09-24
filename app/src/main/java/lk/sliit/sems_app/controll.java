@@ -150,7 +150,7 @@ public class controll extends AppCompatActivity {
     public void checkAnamaly(View view) {
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-            String URL = "http://13.59.11.87:5000/anamaly";
+            String URL = "http://18.222.100.162:5000/anamaly";
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("fname", code);
             final String requestBody = jsonBody.toString();

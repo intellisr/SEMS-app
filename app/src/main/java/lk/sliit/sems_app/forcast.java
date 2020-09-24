@@ -149,7 +149,7 @@ public class forcast extends AppCompatActivity {
         code = sharePref.getString("code",null);
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-            String URL = "http://13.59.11.87:5000/forcastGAP";
+            String URL = "http://18.222.100.162/forcastGAP";
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("fname", code);
             jsonBody.put("weeks", nWeeks);
