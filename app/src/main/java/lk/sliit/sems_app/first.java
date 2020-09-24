@@ -2,6 +2,7 @@ package lk.sliit.sems_app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -56,5 +57,9 @@ public class first extends AppCompatActivity {
         databaseReferencechild2sub2.setValue(1);
         databaseReferencechild2sub3 = databaseReferencechild2.child("sub3");
         databaseReferencechild2sub3.setValue(1);
+
+        Intent dash=new Intent(this, dash.class);
+        startActivity(dash);
+        finish();
     }
 }

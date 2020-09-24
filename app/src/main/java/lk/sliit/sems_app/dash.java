@@ -130,13 +130,13 @@ public class dash extends AppCompatActivity {
     public void goForecastView(View view){
         Intent forecast=new Intent(this, forcast.class);
         startActivity(forecast);
-        finish();
+
     }
 
     public void goPowerProfilingview(View view){
         Intent forecast=new Intent(this, powerpro.class);
         startActivity(forecast);
-        finish();
+
     }
 
 
@@ -144,6 +144,11 @@ public class dash extends AppCompatActivity {
         Intent first=new Intent(this, first.class);
         startActivity(first);
         finish();
+    }
+
+    public void goControllers(View view){
+        Intent controll=new Intent(this, controll.class);
+        startActivity(controll);
     }
 
     public void signOut(View view){
