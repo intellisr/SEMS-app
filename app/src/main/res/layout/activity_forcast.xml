@@ -29,7 +29,7 @@
                 android:textStyle="bold"
                 android:textSize="20dp"
                 android:textAlignment="center"
-                android:text="SEMS - Unit Forcast" />
+                android:text="SEMS - Unit Forecast" />
 
         </LinearLayout>
         <LinearLayout
@@ -43,13 +43,14 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:textStyle="bold"
             android:text="No Of Weeks :" />
 
         <EditText
             android:id="@+id/weeks"
-            android:layout_width="wrap_content"
+            android:layout_width="10dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
@@ -61,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Forcast" />
+            android:text="Forecast" />
 
         </LinearLayout>
     </LinearLayout>

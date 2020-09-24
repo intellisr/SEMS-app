@@ -1,5 +1,7 @@
 package lk.sliit.sems_app;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,10 +30,19 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class forcast extends AppCompatActivity {
 
@@ -42,11 +53,21 @@ public class forcast extends AppCompatActivity {
     public String code;
     public FirebaseAuth mAuth;
     public String uid;
+    public FirebaseDatabase firebaseDatabase;
+    public DatabaseReference databaseReference;
+    public DatabaseReference databaseReferencechild;
+    public DatabaseReference databaseReferenc2;
+    public DatabaseReference databaseReferencechild2;
+    public List<Double> daydata;
+    public List<String> Entrydata;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forcast);
+
+         daydata = new ArrayList<Double>();
+         Entrydata = new ArrayList<String>();
 
         chart = findViewById(R.id.chart1);
         weeks = findViewById(R.id.weeks);
@@ -55,11 +76,62 @@ public class forcast extends AppCompatActivity {
         assert user != null;
         uid=user.getUid();
 
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("forcastStatus");
+        databaseReferencechild = databaseReference.child(uid);
+        databaseReferencechild.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Integer x=dataSnapshot.getValue(Integer.class);
+                if(x == 0){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(forcast.this);
+                    builder.setMessage("Processing...")
+                            .setTitle("Please wait..");
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+
         mTf = Typeface.createFromAsset(getAssets(), "OpenSans-Bold.ttf");
 
-        LineData data = getData(10, 300);
-        data.setValueTypeface(mTf);
-        setupChart(chart, data, Color.rgb(137, 230, 81));
+        databaseReferenc2 = firebaseDatabase.getReference("forcast");
+        databaseReferencechild2 = databaseReferenc2.child(uid);
+        databaseReferencechild2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot != null) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                         daydata = (List<Double>) ds.getValue();
+                         Entrydata.add(Arrays.toString(daydata.toArray()));
+                    }
+                    String arr=Arrays.toString(Entrydata.toArray());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(forcast.this);
+                    builder.setMessage(arr)
+                            .setTitle("Week wise Electricity forecast");
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    //LineData data = getData(daydata);
+                    //data.setValueTypeface(mTf);
+                    //setupChart(chart, data, Color.rgb(137, 230, 81));
+                }else{
+                    chart.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+
 
     }
 
@@ -96,14 +168,7 @@ public class forcast extends AppCompatActivity {
         chart.animateX(2500);
     }
 
-    private LineData getData(int count, float range) {
-
-        ArrayList<Entry> values = new ArrayList<>();
-
-        for (int i = 0; i < count; i++) {
-            float val = (float) (Math.random() * range) + 3;
-            values.add(new Entry(i, val));
-        }
+    private LineData getData(List<Entry> values) {
 
         // create a dataset and give it a type
         LineDataSet set1 = new LineDataSet(values, "DataSet 1");
@@ -149,7 +214,7 @@ public class forcast extends AppCompatActivity {
         code = sharePref.getString("code",null);
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-            String URL = "http://18.222.100.162/forcastGAP";
+            String URL = "http://18.222.100.162:5000/forcastGAP";
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("fname", code);
             jsonBody.put("weeks", nWeeks);
@@ -189,9 +254,11 @@ public class forcast extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        LineData data = getData(10, 300);
-        data.setValueTypeface(mTf);
-        setupChart(chart, data, Color.rgb(137, 230, 81));
+
     }
 
+    public void createGraph()
+    {
+
+    }
 }
