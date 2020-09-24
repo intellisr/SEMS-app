@@ -31,6 +31,7 @@ public class first extends AppCompatActivity {
         setContentView(R.layout.activity_first);
 
         snumber=findViewById(R.id.sno);
+
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         assert user != null;
@@ -44,10 +45,11 @@ public class first extends AppCompatActivity {
 
 
     public void pairWithDevice(View view) {
-        databaseReferencechild = databaseReference.child(snumber.getText().toString());
+        String itemNo = snumber.getText().toString();
+        databaseReferencechild = databaseReference.child(itemNo);
         databaseReferencechild.setValue(uid);
 
-        databaseReferencechild2=databaseReference2.child(snumber.getText().toString());
+        databaseReferencechild2=databaseReference2.child(itemNo);
         databaseReferencechild2sub1 = databaseReferencechild2.child("sub1");
         databaseReferencechild2sub1.setValue(1);
         databaseReferencechild2sub2 = databaseReferencechild2.child("sub2");

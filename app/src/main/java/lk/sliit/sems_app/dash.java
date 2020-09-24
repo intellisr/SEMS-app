@@ -4,15 +4,20 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,20 +46,40 @@ public class dash extends AppCompatActivity {
     private TextView uni3;
     private TextView uname;
     private TextView snumber;
+    private TextView profileview;
     private ImageView userPic;
+    public  String profile;
+    public GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash);
 
+        SharedPreferences sharePref= PreferenceManager.getDefaultSharedPreferences(this);
+        profile=sharePref.getString("profile",null);
+
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        // Build a GoogleSignInClient with the options specified by gso.
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
         uni1=findViewById(R.id.unit1);
         uni2=findViewById(R.id.unit2);
         uni3=findViewById(R.id.unit3);
         uname=findViewById(R.id.name);
+        profileview=findViewById(R.id.profile);
         snumber=findViewById(R.id.sno);
         userPic=(ImageView)findViewById(R.id.upic);
 
+        if(profile == null){
+
+        }else{
+            profileview.setText(profile);
+        }
 
         mAuth= FirebaseAuth.getInstance();
         FirebaseUser user=mAuth.getCurrentUser();
@@ -83,6 +108,10 @@ public class dash extends AppCompatActivity {
                     uni1.setText("Unit1 : " + Long.toString(units.getCol7()));
                     uni2.setText("Unit2 : " + Long.toString(units.getCol8()));
                     uni3.setText("Unit3 : " + Long.toString(units.getCol9()));
+                    SharedPreferences sharePref= PreferenceManager.getDefaultSharedPreferences(dash.this);
+                    SharedPreferences.Editor editor = sharePref.edit();
+                    editor.putString("code",units.getCol10());
+                    editor.apply();
                 }else{
                     goFirstTimeActivity();
                 }
@@ -101,11 +130,13 @@ public class dash extends AppCompatActivity {
     public void goForecastView(View view){
         Intent forecast=new Intent(this, forcast.class);
         startActivity(forecast);
+        finish();
     }
 
     public void goPowerProfilingview(View view){
         Intent forecast=new Intent(this, powerpro.class);
         startActivity(forecast);
+        finish();
     }
 
 
@@ -113,6 +144,13 @@ public class dash extends AppCompatActivity {
         Intent first=new Intent(this, first.class);
         startActivity(first);
         finish();
+    }
+
+    public void signOut(View view){
+        mAuth.signOut();
+        mGoogleSignInClient.signOut();
+        Intent intent=new Intent(this,MainActivity.class);
+        startActivity(intent);
     }
 
 }

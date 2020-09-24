@@ -112,6 +112,7 @@
                     android:src="@drawable/ic_home_white" />
 
                 <TextView
+                    android:id="@+id/profile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -212,5 +213,15 @@
 
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="5dp"
+        android:onClick="signOut"
+        android:text="Logout from SEMS"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"/>
 
 </LinearLayout>

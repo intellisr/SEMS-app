@@ -1,38 +1,32 @@
 package lk.sliit.sems_app;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
-import android.widget.Toast;
-
-import com.apptakk.http_request.HttpRequest;
-import com.apptakk.http_request.HttpRequestTask;
-import com.apptakk.http_request.HttpResponse;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
-
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URL;
+
 
 public class powerpro extends AppCompatActivity {
     Spinner solarSpin;
@@ -49,8 +43,9 @@ public class powerpro extends AppCompatActivity {
     public DatabaseReference databaseReference;
     public DatabaseReference databaseReferencechild;
     public String uid;
-    public String response;
-    public String payload;
+    public int result;
+    public String profile;
+    public String units;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,51 +167,220 @@ public class powerpro extends AppCompatActivity {
         databaseReferencechild = databaseReference.child(uid);
         databaseReferencechild.setValue(myhome);
         //payload="{ \'solar\':\'"+solar+"\',\'male\':\'"+maleCount+"\',\'female\':\'"+femaleCount+"\',\'child:\'"+childCount+"\',adult:"+adultCount+",emp:"+empCount+",income:"+income+",district:"+district+",size:"+size+",aircon:"+Aircon+",fan:"+Fan+",oven:"+Oven+",micro:"+Microwaves+",refig:"+Refrigerators+",car:"+Car+",geys:"+Geysers+"}";
-        new HttpRequestTask(
-                new HttpRequest("http://13.59.11.87:5000/predict_Profile", HttpRequest.POST, "{ \'solar\':\'"+solar+"\',\'male\':\'"+maleCount+"\',\'female\':\'"+femaleCount+"\',\'child:\'"+childCount+"\'}"),
-                new HttpRequest.Handler() {
-                    @Override
-                    public void response(HttpResponse response) {
-                        if (response.code == 200) {
-                            Log.d(this.getClass().toString(), "Request successful!");
-                        } else {
-                            Log.e(this.getClass().toString(), "Request unsuccessful: " + response);
-                        }
-                    }
-                }).execute();
 
-
-        String result="result is " + response;
-        Toast.makeText(powerpro.this, result,
-                Toast.LENGTH_SHORT).show();
-    }
-
-    public static String makePostRequest(String stringUrl, String payload) throws IOException {
-        URL url = new URL(stringUrl);
-        HttpURLConnection uc = (HttpURLConnection) url.openConnection();
-        String line;
-        StringBuffer jsonString = new StringBuffer();
-
-        uc.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-        uc.setRequestMethod("POST");
-        uc.setDoInput(true);
-        uc.setInstanceFollowRedirects(false);
-        uc.connect();
-        OutputStreamWriter writer = new OutputStreamWriter(uc.getOutputStream(), "UTF-8");
-        writer.write(payload);
-        writer.close();
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(uc.getInputStream()));
-            while((line = br.readLine()) != null){
-                jsonString.append(line);
-            }
-            br.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            String URL = "http://13.59.11.87:5000/predict_Profile";
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("solar", solar);
+            jsonBody.put("male", maleCount);
+            jsonBody.put("female", femaleCount);
+            jsonBody.put("child", childCount);
+            jsonBody.put("adult", adultCount);
+            jsonBody.put("emp", empCount);
+            jsonBody.put("income", income);
+            jsonBody.put("district", maleCount);
+            jsonBody.put("size", size);
+            jsonBody.put("aircon", Aircon);
+            jsonBody.put("fan", Fan);
+            jsonBody.put("oven", Oven);
+            jsonBody.put("micro", Microwaves);
+            jsonBody.put("refig", Refrigerators);
+            jsonBody.put("car", Car);
+            jsonBody.put("geys", Geysers);
+            final String requestBody = jsonBody.toString();
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("VOLLEY", response);
+                    double num = Double.parseDouble(response);
+                    result=(int)num;
+                    if(result == 1){
+                        profile="Low Profile";
+                        units="0 - 160.5 Units";
+                    }else if(result == 2){
+                        profile="Medium Profile";
+                        units="160.5 - 440 Units";
+                    }else{
+                        profile="High Profile";
+                        units="Over 440 Units";
+                    }
+                    AlertDialog.Builder builder = new AlertDialog.Builder(powerpro.this);
+                    builder.setMessage("You could used "+units+" per month")
+                            .setTitle("Your home have a "+profile);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                    SharedPreferences sharePref= PreferenceManager.getDefaultSharedPreferences(powerpro.this);
+                    SharedPreferences.Editor editor = sharePref.edit();
+                    editor.putString("profile",profile);
+                    editor.apply();
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("VOLLEY", error.toString());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
+                    }
+                }
+
+            };
+
+            requestQueue.add(stringRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        uc.disconnect();
-        return jsonString.toString();
+
+
     }
+
+
+    public void submitHomeToPredict(View view) throws MalformedURLException {
+        int solar=(int)solarSpin.getSelectedItemId();
+        int maleCount=(int)maleSpin.getSelectedItemId();
+        int femaleCount=(int)femaleSpin.getSelectedItemId();
+        int childCount=(int)childrenSpin.getSelectedItemId();
+        int adultCount=(int)adultsSpin.getSelectedItemId();
+        int empCount=(int)employedSpin.getSelectedItemId();
+        int income=(int)incomeSpin.getSelectedItemId();
+        int district=(int)districtSpin.getSelectedItemId();
+        int size=(int)sizeSpin.getSelectedItemId();
+        int Aircon=0;
+        int Fan=0;
+        int Oven=0;
+        int Microwaves=0;
+        int Refrigerators=0;
+        int Car=0;
+        int Geysers=0;
+
+        boolean isCheckedAircon = ((CheckBox) findViewById(R.id.aircon)).isChecked();
+        if(isCheckedAircon){
+            Aircon=1;
+        }
+
+        boolean isCheckedFan = ((CheckBox) findViewById(R.id.fan)).isChecked();
+        if(isCheckedFan){
+            Fan=1;
+        }
+
+        boolean isCheckedOven = ((CheckBox) findViewById(R.id.oven)).isChecked();
+        if(isCheckedOven){
+            Oven=1;
+        }
+
+        boolean isCheckedMicrowaves = ((CheckBox) findViewById(R.id.Microwaves)).isChecked();
+        if(isCheckedMicrowaves){
+            Microwaves=1;
+        }
+
+        boolean isCheckedRefrigerators= ((CheckBox) findViewById(R.id.Refrigerators)).isChecked();
+        if(isCheckedRefrigerators){
+            Refrigerators=1;
+        }
+
+        boolean isCheckedCar = ((CheckBox) findViewById(R.id.car)).isChecked();
+        if(isCheckedCar){
+            Car=1;
+        }
+
+        boolean isCheckedGeysers= ((CheckBox) findViewById(R.id.geysers)).isChecked();
+        if(isCheckedGeysers){
+            Geysers=1;
+        }
+
+
+        try {
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            String URL = "http://13.59.11.87:5000/predict_Profile";
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("solar", solar);
+            jsonBody.put("male", maleCount);
+            jsonBody.put("female", femaleCount);
+            jsonBody.put("child", childCount);
+            jsonBody.put("adult", adultCount);
+            jsonBody.put("emp", empCount);
+            jsonBody.put("income", income);
+            jsonBody.put("district", maleCount);
+            jsonBody.put("size", size);
+            jsonBody.put("aircon", Aircon);
+            jsonBody.put("fan", Fan);
+            jsonBody.put("oven", Oven);
+            jsonBody.put("micro", Microwaves);
+            jsonBody.put("refig", Refrigerators);
+            jsonBody.put("car", Car);
+            jsonBody.put("geys", Geysers);
+            final String requestBody = jsonBody.toString();
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("VOLLEY", response);
+                    double num = Double.parseDouble(response);
+                    result=(int)num;
+                    if(result == 1){
+                        profile="Law Profile";
+                        units="0 - 160.5 Units";
+                    }else if(result == 2){
+                        profile="Medium Profile";
+                        units="160.5 - 440 Units";
+                    }else{
+                        profile="High Profile";
+                        units="Over 440 Units";
+                    }
+                    AlertDialog.Builder builder = new AlertDialog.Builder(powerpro.this);
+                    builder.setMessage("It could used "+units+" per month")
+                            .setTitle("This home have a "+profile);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("VOLLEY", error.toString());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
+                    }
+                }
+
+            };
+
+            requestQueue.add(stringRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
 
 }

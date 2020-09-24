@@ -1,25 +1,47 @@
 package lk.sliit.sems_app;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import android.view.View;
+import android.widget.EditText;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 public class forcast extends AppCompatActivity {
 
     public LineChart chart ;
+    public Typeface mTf;
+    public EditText weeks;
+    public int nWeeks;
+    public String code;
+    public FirebaseAuth mAuth;
+    public String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +49,16 @@ public class forcast extends AppCompatActivity {
         setContentView(R.layout.activity_forcast);
 
         chart = findViewById(R.id.chart1);
-        Typeface mTf = Typeface.createFromAsset(getAssets(), "OpenSans-Bold.ttf");
+        weeks = findViewById(R.id.weeks);
+        mAuth= FirebaseAuth.getInstance();
+        FirebaseUser user=mAuth.getCurrentUser();
+        assert user != null;
+        uid=user.getUid();
+
+        mTf = Typeface.createFromAsset(getAssets(), "OpenSans-Bold.ttf");
 
         LineData data = getData(10, 300);
         data.setValueTypeface(mTf);
-
         setupChart(chart, data, Color.rgb(137, 230, 81));
 
     }
@@ -40,11 +67,10 @@ public class forcast extends AppCompatActivity {
         ((LineDataSet) data.getDataSetByIndex(0)).setCircleHoleColor(color);
         // no description text
         chart.getDescription().setEnabled(true);
-
          //chart.setDrawHorizontalGrid(false);
         // enable / disable grid background
         chart.setDrawGridBackground(true);
-      //chart.getRenderer().getGridPaint().setGridColor(Color.WHITE & 0x70FFFFFF);
+        //chart.getRenderer().getGridPaint().setGridColor(Color.WHITE & 0x70FFFFFF);
         // enable touch gestures
         chart.setTouchEnabled(true);
         // enable scaling and dragging
@@ -115,6 +141,57 @@ public class forcast extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    public void forcastUnits(View view){
+        nWeeks = Integer.parseInt(weeks.getText().toString());
+        SharedPreferences sharePref = PreferenceManager.getDefaultSharedPreferences(this);
+        code = sharePref.getString("code",null);
+        try {
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            String URL = "http://13.59.11.87:5000/forcastGAP";
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("fname", code);
+            jsonBody.put("weeks", nWeeks);
+            jsonBody.put("user", uid);
+            final String requestBody = jsonBody.toString();
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("VOLLEY", response);
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("VOLLEY", error.toString());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
+                    }
+                }
+
+            };
+
+            requestQueue.add(stringRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        LineData data = getData(10, 300);
+        data.setValueTypeface(mTf);
+        setupChart(chart, data, Color.rgb(137, 230, 81));
     }
 
 }

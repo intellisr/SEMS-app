@@ -60,6 +60,8 @@
         android:id="@+id/button"
         android:layout_width="108dp"
         android:layout_height="38dp"
+        android:onClick="pairWithDevice"
+        android:textColor="@color/black_overlay"
         android:layout_marginBottom="396dp"
         android:background="@drawable/rounded_edittext"
         android:text="Pair"
