@@ -117,6 +117,7 @@ public class forcast extends AppCompatActivity {
                             .setTitle("Week wise Electricity forecast");
                     AlertDialog dialog = builder.create();
                     dialog.show();
+                    Entrydata.clear();
                     //LineData data = getData(daydata);
                     //data.setValueTypeface(mTf);
                     //setupChart(chart, data, Color.rgb(137, 230, 81));
