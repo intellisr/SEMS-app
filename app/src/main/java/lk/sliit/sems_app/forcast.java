@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.inputmethodservice.Keyboard;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,10 +26,14 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -37,12 +43,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 public class forcast extends AppCompatActivity {
 
@@ -60,6 +69,9 @@ public class forcast extends AppCompatActivity {
     public DatabaseReference databaseReferencechild2;
     public List<Double> daydata;
     public List<String> Entrydata;
+    public AlertDialog dialog2;
+    public int timeState = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,75 +88,25 @@ public class forcast extends AppCompatActivity {
         assert user != null;
         uid=user.getUid();
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("forcastStatus");
-        databaseReferencechild = databaseReference.child(uid);
-        databaseReferencechild.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Integer x=dataSnapshot.getValue(Integer.class);
-                if(x == 0){
-                    AlertDialog.Builder builder = new AlertDialog.Builder(forcast.this);
-                    builder.setMessage("Processing...")
-                            .setTitle("Please wait..");
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-        });
-
-        mTf = Typeface.createFromAsset(getAssets(), "OpenSans-Bold.ttf");
-
-        databaseReferenc2 = firebaseDatabase.getReference("forcast");
-        databaseReferencechild2 = databaseReferenc2.child(uid);
-        databaseReferencechild2.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot != null) {
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                         daydata = (List<Double>) ds.getValue();
-                         Entrydata.add(Arrays.toString(daydata.toArray()));
-                    }
-                    String arr=Arrays.toString(Entrydata.toArray());
-                    AlertDialog.Builder builder = new AlertDialog.Builder(forcast.this);
-                    builder.setMessage(arr)
-                            .setTitle("Week wise Electricity forecast");
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                    Entrydata.clear();
-                    //LineData data = getData(daydata);
-                    //data.setValueTypeface(mTf);
-                    //setupChart(chart, data, Color.rgb(137, 230, 81));
-                }else{
-                    chart.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-        });
-
-
     }
 
     private void setupChart(LineChart chart, LineData data, int color) {
+        chart.setData(data);
+        chart.invalidate();
+
         ((LineDataSet) data.getDataSetByIndex(0)).setCircleHoleColor(color);
-        // no description text
-        chart.getDescription().setEnabled(true);
-         //chart.setDrawHorizontalGrid(false);
-        // enable / disable grid background
-        chart.setDrawGridBackground(true);
-        //chart.getRenderer().getGridPaint().setGridColor(Color.WHITE & 0x70FFFFFF);
-        // enable touch gestures
+        Description dis=new Description();
+        dis.setText("GAP Forecasting");
+        dis.setTextColor(Color.BLUE);
+        dis.setTextSize(30);
+        chart.setDescription(dis);
+
+
+
+        chart.setNoDataText("You must click forecast button");
+        chart.setDrawBorders(true);
+        chart.setBorderColor(Color.RED);
+
         chart.setTouchEnabled(true);
         // enable scaling and dragging
         chart.setDragEnabled(true);
@@ -153,32 +115,27 @@ public class forcast extends AppCompatActivity {
         chart.setPinchZoom(true);
         chart.setBackgroundColor(Color.rgb(255, 255, 250));
         // set custom chart offsets (automatic offset calculation is hereby disabled)
-        chart.setViewPortOffsets(10, 0, 10, 0);
-        // add data
-        chart.setData(data);
+
         // get the legend (only possible after setting data)
-        Legend l = chart.getLegend();
-        l.setEnabled(false);
-        chart.getAxisLeft().setEnabled(false);
-        chart.getAxisLeft().setSpaceTop(40);
-        chart.getAxisLeft().setSpaceBottom(40);
-        chart.getAxisRight().setEnabled(false);
-        chart.getXAxis().setEnabled(true);
-        //chart.getAxis(YAxis).setEnabled(true);
-        // animate calls invalidate()...
+        chart.getXAxis().setValueFormatter(new ValueFormatter() {
+                                               @Override
+                                               public String getFormattedValue(float value) {
+                                                   return "WEEK "+value;
+                                               }
+                                           });
         chart.animateX(2500);
     }
 
     private LineData getData(List<Entry> values) {
 
         // create a dataset and give it a type
-        LineDataSet set1 = new LineDataSet(values, "DataSet 1");
+        LineDataSet set1 = new LineDataSet(values, "WEEKS");
         // set1.setFillAlpha(110);
         set1.setFillColor(Color.RED);
 
         set1.setLineWidth(1.75f);
-        set1.setCircleRadius(5f);
-        set1.setCircleHoleRadius(2.5f);
+        set1.setCircleRadius(7f);
+        set1.setCircleHoleRadius(3.5f);
         set1.setColor(Color.GREEN);
         set1.setCircleColor(Color.BLUE);
         set1.setHighLightColor(Color.WHITE);
@@ -210,12 +167,18 @@ public class forcast extends AppCompatActivity {
     }
 
     public void forcastUnits(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(forcast.this);
+        builder.setMessage("Processing...")
+                            .setTitle("Please wait..");
+        dialog2 = builder.create();
+        dialog2.show();
+
         nWeeks = Integer.parseInt(weeks.getText().toString());
         SharedPreferences sharePref = PreferenceManager.getDefaultSharedPreferences(this);
         code = sharePref.getString("code",null);
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-            String URL = "http://18.222.100.162:5000/forcastGAP";
+            String URL = "http://34.207.70.88:5000/forcastGAP";
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("fname", code);
             jsonBody.put("weeks", nWeeks);
@@ -226,6 +189,32 @@ public class forcast extends AppCompatActivity {
                 @Override
                 public void onResponse(String response) {
                     Log.i("VOLLEY", response);
+                    dialog2.hide();
+                    mTf = Typeface.createFromAsset(getAssets(), "OpenSans-Bold.ttf");
+                    try {
+                        List<Entry> listObjects = new ArrayList<Entry>();
+                        JSONArray jsonArray = new JSONArray(response);
+                        for (int i=0; i < jsonArray.length(); i++) {
+                            double x=0;
+                            JSONArray arr=jsonArray.getJSONArray(i);
+                            for (int j=0; j < arr.length(); j++) {
+                                x =arr.getDouble(j);
+                                x=x+x;
+                            }
+                            Log.i("SRA", arr.toString());
+                            float xval=(float) i;
+                            float yval=(float) x;
+                            Entry entry = new Entry(xval, yval);
+                            listObjects.add(entry);
+                        }
+                        LineData data = getData(listObjects);
+                        data.setValueTypeface(mTf);
+                        setupChart(chart, data, Color.rgb(137, 230, 81));
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.i("SRA", e.toString());
+                    }
 
                 }
             }, new Response.ErrorListener() {
@@ -251,6 +240,11 @@ public class forcast extends AppCompatActivity {
 
             };
 
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    300000,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
             requestQueue.add(stringRequest);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -258,8 +252,4 @@ public class forcast extends AppCompatActivity {
 
     }
 
-    public void createGraph()
-    {
-
-    }
 }
