@@ -26,7 +26,8 @@
         android:layout_height="wrap_content"
         android:text=""
         android:textStyle="bold"
-        android:textColor="@color/colorPrimary"/>
+        android:textColor="@color/colorPrimary"
+        />
 
     <TextView
         android:id="@+id/sno"
@@ -116,7 +117,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Power Profile"
+                    android:text="My Energy Profile"
                     android:textStyle="bold" />
 
                 <View

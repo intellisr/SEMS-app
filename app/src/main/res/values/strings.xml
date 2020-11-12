@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">SEMS-app</string>
-
+    <string name="SEMSserver" translatable="false">http://34.207.70.88:5000/</string>
     <string-array name="basicArray">
-        <item>None</item>
-        <item>One</item>
-        <item>Two</item>
-        <item>Three</item>
-        <item>Four</item>
-        <item>Five or more</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5 or more</item>
     </string-array>
 
     <string-array name="yesnoArray">
@@ -52,6 +52,13 @@
         <item>Batticaloa</item>
         <item>Badulla</item>
         <item>Matale</item>
+    </string-array>
+
+    <string-array name="weekArray">
+        <item>1 Week</item>
+        <item>2 Weeks</item>
+        <item>3 Weeks</item>
+        <item>4 Weeks</item>
     </string-array>
 
 

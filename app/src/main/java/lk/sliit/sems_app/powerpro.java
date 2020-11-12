@@ -38,6 +38,7 @@ public class powerpro extends AppCompatActivity {
     Spinner incomeSpin;
     Spinner districtSpin;
     Spinner sizeSpin;
+
     public FirebaseAuth mAuth;
     public FirebaseDatabase firebaseDatabase;
     public DatabaseReference databaseReference;
@@ -118,49 +119,15 @@ public class powerpro extends AppCompatActivity {
         int size=(int)sizeSpin.getSelectedItemId();
         int Aircon=0;
         int Fan=0;
-        int Oven=0;
-        int Microwaves=0;
-        int Refrigerators=0;
-        int Car=0;
-        int Geysers=0;
-
-        boolean isCheckedAircon = ((CheckBox) findViewById(R.id.aircon)).isChecked();
-        if(isCheckedAircon){
-             Aircon=1;
-        }
-
-        boolean isCheckedFan = ((CheckBox) findViewById(R.id.fan)).isChecked();
-        if(isCheckedFan){
-             Fan=1;
-        }
-
-        boolean isCheckedOven = ((CheckBox) findViewById(R.id.oven)).isChecked();
-        if(isCheckedOven){
-             Oven=1;
-        }
-
-        boolean isCheckedMicrowaves = ((CheckBox) findViewById(R.id.Microwaves)).isChecked();
-        if(isCheckedMicrowaves){
-             Microwaves=1;
-        }
-
-        boolean isCheckedRefrigerators= ((CheckBox) findViewById(R.id.Refrigerators)).isChecked();
-        if(isCheckedRefrigerators){
-             Refrigerators=1;
-        }
-
-        boolean isCheckedCar = ((CheckBox) findViewById(R.id.car)).isChecked();
-        if(isCheckedCar){
-             Car=1;
-        }
-
-        boolean isCheckedGeysers= ((CheckBox) findViewById(R.id.geysers)).isChecked();
-        if(isCheckedGeysers){
-             Geysers=1;
-        }
+        int micro=0;
+        int tv=0;
+        int refig=0;
+        int iron=0;
+        int geys=0;
+        int wash=0;
 
 
-        Home myhome = new Home(solar,maleCount,femaleCount,childCount,adultCount,empCount,income,district,size,Aircon,Fan,Oven,Microwaves,Refrigerators,Car,Geysers);
+        Home myhome = new Home(solar, maleCount, femaleCount, childCount, adultCount, empCount, income, district, size, Aircon, Fan, micro, tv, refig, iron, geys, wash);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Home");
@@ -170,9 +137,9 @@ public class powerpro extends AppCompatActivity {
 
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-            String URL = "http://18.222.100.162:5000/predict_Profile";
+            String URL = getString(R.string.SEMSserver)+"predict_Profile";
             JSONObject jsonBody = new JSONObject();
-            jsonBody.put("solar", solar);
+            jsonBody.put("solar", 0);
             jsonBody.put("male", maleCount);
             jsonBody.put("female", femaleCount);
             jsonBody.put("child", childCount);
@@ -181,13 +148,14 @@ public class powerpro extends AppCompatActivity {
             jsonBody.put("income", income);
             jsonBody.put("district", maleCount);
             jsonBody.put("size", size);
-            jsonBody.put("aircon", Aircon);
-            jsonBody.put("fan", Fan);
-            jsonBody.put("oven", Oven);
-            jsonBody.put("micro", Microwaves);
-            jsonBody.put("refig", Refrigerators);
-            jsonBody.put("car", Car);
-            jsonBody.put("geys", Geysers);
+            jsonBody.put("aircon", Aircon);//aircon
+            jsonBody.put("fan", Fan);//fan
+            jsonBody.put("micro", micro);//mcwave
+            jsonBody.put("tv", tv);//tv
+            jsonBody.put("refig", refig);//refig
+            jsonBody.put("iron", iron);//iron
+            jsonBody.put("geys", geys);//gays
+            jsonBody.put("wash", wash);//washmach
             final String requestBody = jsonBody.toString();
 
             StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
@@ -262,53 +230,20 @@ public class powerpro extends AppCompatActivity {
         int size=(int)sizeSpin.getSelectedItemId();
         int Aircon=0;
         int Fan=0;
-        int Oven=0;
-        int Microwaves=0;
-        int Refrigerators=0;
-        int Car=0;
-        int Geysers=0;
+        int micro=0;
+        int tv=0;
+        int refig=0;
+        int iron=0;
+        int geys=0;
+        int wash=0;
 
-        boolean isCheckedAircon = ((CheckBox) findViewById(R.id.aircon)).isChecked();
-        if(isCheckedAircon){
-            Aircon=1;
-        }
-
-        boolean isCheckedFan = ((CheckBox) findViewById(R.id.fan)).isChecked();
-        if(isCheckedFan){
-            Fan=1;
-        }
-
-        boolean isCheckedOven = ((CheckBox) findViewById(R.id.oven)).isChecked();
-        if(isCheckedOven){
-            Oven=1;
-        }
-
-        boolean isCheckedMicrowaves = ((CheckBox) findViewById(R.id.Microwaves)).isChecked();
-        if(isCheckedMicrowaves){
-            Microwaves=1;
-        }
-
-        boolean isCheckedRefrigerators= ((CheckBox) findViewById(R.id.Refrigerators)).isChecked();
-        if(isCheckedRefrigerators){
-            Refrigerators=1;
-        }
-
-        boolean isCheckedCar = ((CheckBox) findViewById(R.id.car)).isChecked();
-        if(isCheckedCar){
-            Car=1;
-        }
-
-        boolean isCheckedGeysers= ((CheckBox) findViewById(R.id.geysers)).isChecked();
-        if(isCheckedGeysers){
-            Geysers=1;
-        }
 
 
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-            String URL = "http://13.59.11.87:5000/predict_Profile";
+            String URL = getString(R.string.SEMSserver)+"predict_Profile";
             JSONObject jsonBody = new JSONObject();
-            jsonBody.put("solar", solar);
+            jsonBody.put("solar", 0);
             jsonBody.put("male", maleCount);
             jsonBody.put("female", femaleCount);
             jsonBody.put("child", childCount);
@@ -317,13 +252,14 @@ public class powerpro extends AppCompatActivity {
             jsonBody.put("income", income);
             jsonBody.put("district", maleCount);
             jsonBody.put("size", size);
-            jsonBody.put("aircon", Aircon);
-            jsonBody.put("fan", Fan);
-            jsonBody.put("oven", Oven);
-            jsonBody.put("micro", Microwaves);
-            jsonBody.put("refig", Refrigerators);
-            jsonBody.put("car", Car);
-            jsonBody.put("geys", Geysers);
+            jsonBody.put("aircon", Aircon);//aircon
+            jsonBody.put("fan", Fan);//fan
+            jsonBody.put("micro", micro);//mcwave
+            jsonBody.put("tv", tv);//tv
+            jsonBody.put("refig", refig);//refig
+            jsonBody.put("iron", iron);//iron
+            jsonBody.put("geys", geys);//gays
+            jsonBody.put("wash", wash);//washmach
             final String requestBody = jsonBody.toString();
 
             StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {

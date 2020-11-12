@@ -116,7 +116,8 @@ public class controll extends AppCompatActivity {
 
         });
 
-        Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/sems-app.appspot.com/o/SEMS2Xplot.png?alt=media&token=e69a87ad-a8d4-4985-8b60-87df04c54681").into(graph);
+        String PICURL= getString(R.string.SEMSserver) + "static/" + code +"plot.png";
+        Picasso.get().load(PICURL).into(graph);
 
 
     }
@@ -150,7 +151,7 @@ public class controll extends AppCompatActivity {
     public void checkAnamaly(View view) {
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-            String URL = "http://18.222.100.162:5000/anamaly";
+            String URL = getString(R.string.SEMSserver)+"anamaly";
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("fname", code);
             jsonBody.put("user", uid);

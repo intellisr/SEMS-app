@@ -12,13 +12,14 @@ public class Home {
     int size;
     int Aircon;
     int Fan;
-    int Oven;
-    int Microwaves;
-    int Refrigerators;
-    int Car;
-    int Geysers;
+    int micro;
+    int tv;
+    int refig;
+    int iron;
+    int geys;
+    int wash;
 
-    public Home(int solar, int maleCount, int femaleCount, int childCount, int adultCount, int empCount, int income, int district, int size, int aircon, int fan, int oven, int microwaves, int refrigerators, int car, int geysers) {
+    public Home(int solar, int maleCount, int femaleCount, int childCount, int adultCount, int empCount, int income, int district, int size, int aircon, int fan, int micro, int tv, int refig, int iron, int geys, int wash) {
         this.solar = solar;
         this.maleCount = maleCount;
         this.femaleCount = femaleCount;
@@ -30,11 +31,12 @@ public class Home {
         this.size = size;
         Aircon = aircon;
         Fan = fan;
-        Oven = oven;
-        Microwaves = microwaves;
-        Refrigerators = refrigerators;
-        Car = car;
-        Geysers = geysers;
+        this.micro = micro;
+        this.tv = tv;
+        this.refig = refig;
+        this.iron = iron;
+        this.geys = geys;
+        this.wash = wash;
     }
 
     public int getSolar() {
@@ -81,23 +83,27 @@ public class Home {
         return Fan;
     }
 
-    public int getOven() {
-        return Oven;
+    public int getMicro() {
+        return micro;
     }
 
-    public int getMicrowaves() {
-        return Microwaves;
+    public int getTv() {
+        return tv;
     }
 
-    public int getRefrigerators() {
-        return Refrigerators;
+    public int getRefig() {
+        return refig;
     }
 
-    public int getCar() {
-        return Car;
+    public int getIron() {
+        return iron;
     }
 
-    public int getGeysers() {
-        return Geysers;
+    public int getGeys() {
+        return geys;
+    }
+
+    public int getWash() {
+        return wash;
     }
 }

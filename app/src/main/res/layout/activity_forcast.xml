@@ -60,9 +60,9 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/weeks" />
 
-                <EditText
+                <Spinner
                     android:id="@+id/weeks"
-                    android:layout_width="40dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="11dp"
                     android:layout_weight="1"

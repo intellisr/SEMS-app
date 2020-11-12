@@ -399,7 +399,7 @@
                 android:id="@+id/namecard10"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:layout_height="200dp"
+                android:layout_height="400dp"
                 android:clickable="true"
                 android:foreground="?android:attr/selectableItemBackground">
 
@@ -407,7 +407,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="left"
+                    android:gravity="center"
                     android:orientation="vertical">
 
 
@@ -423,74 +423,178 @@
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
-                            android:text="10. Select the devices you have"
+                            android:text="10. Fill the no of devices you have"
                             android:textSize="20dp" />
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_width="200dp">
 
-                        <CheckBox android:id="@+id/aircon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:text="Air conditioners" />
 
-                        <CheckBox android:id="@+id/fan"
-                            android:layout_width="wrap_content"
+                        <EditText
+                            android:id="@+id/aircon"
+                            android:layout_width="200dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:text="Ceiling Fans" />
-
-                        <CheckBox android:id="@+id/oven"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:text="Ovens" />
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:inputType="number"
+                            android:hint="No Of Aircondioners"
+                            />
 
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_width="200dp">
 
-                        <CheckBox android:id="@+id/Microwaves"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:text="Microwaves" />
 
-                        <CheckBox android:id="@+id/Refrigerators"
-                            android:layout_width="wrap_content"
+                        <EditText
+                            android:id="@+id/oven"
+                            android:layout_width="200dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:text="Refrigerators" />
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:inputType="number"
+                            android:hint="No Of Tvs"
+                            />
 
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:layout_width="200dp"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+
+
+                        <EditText
+                            android:id="@+id/fan"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:inputType="number"
+                            android:hint="No Of Fans"
+                            />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_width="200dp"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+
+
+                        <EditText
+                            android:id="@+id/Microwaves"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:inputType="number"
+                            android:hint="No Of Microwaves"
+                            />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_width="200dp"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/Refrigerators"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:inputType="number"
+                            android:hint="No Of Refrigerators"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_width="200dp"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/car"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:inputType="number"
+                            android:hint="No Of Car"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_width="200dp"
                         android:layout_height="match_parent"
                         android:orientation="horizontal">
 
-                        <CheckBox android:id="@+id/car"
-                            android:layout_width="wrap_content"
+                        <EditText
+                            android:id="@+id/geysers"
+                            android:layout_width="200dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:text="Charge Electric Vehicles" />
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:inputType="number"
+                            android:hint="No Of Geysers"
+                            />
 
-                        <CheckBox android:id="@+id/geysers"
-                            android:layout_width="wrap_content"
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_width="200dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/iron"
+                            android:layout_width="200dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:text="Hot Water Geysers" />
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:inputType="number"
+                            android:hint="No Of Irons"
+                            />
 
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_width="200dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/wash"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:inputType="number"
+                            android:hint="No Of Washing Machines"
+                            />
 
                     </LinearLayout>
 

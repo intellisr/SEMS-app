@@ -15,7 +15,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -47,8 +50,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
@@ -57,7 +64,7 @@ public class forcast extends AppCompatActivity {
 
     public LineChart chart ;
     public Typeface mTf;
-    public EditText weeks;
+    public Spinner weeks;
     public int nWeeks;
     public String code;
     public FirebaseAuth mAuth;
@@ -82,11 +89,15 @@ public class forcast extends AppCompatActivity {
          Entrydata = new ArrayList<String>();
 
         chart = findViewById(R.id.chart1);
-        weeks = findViewById(R.id.weeks);
         mAuth= FirebaseAuth.getInstance();
         FirebaseUser user=mAuth.getCurrentUser();
         assert user != null;
         uid=user.getUid();
+
+        weeks = (Spinner) findViewById(R.id.weeks);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.weekArray, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        weeks.setAdapter(adapter);
 
     }
 
@@ -100,7 +111,7 @@ public class forcast extends AppCompatActivity {
         dis.setTextColor(Color.BLUE);
         dis.setTextSize(30);
         chart.setDescription(dis);
-
+        chart.setDrawGridBackground(false);
 
 
         chart.setNoDataText("You must click forecast button");
@@ -120,10 +131,14 @@ public class forcast extends AppCompatActivity {
         chart.getXAxis().setValueFormatter(new ValueFormatter() {
                                                @Override
                                                public String getFormattedValue(float value) {
-                                                   return "WEEK "+value;
+                                                   String day=getNextDate((int)value);
+                                                   return day;
                                                }
                                            });
+        chart.getXAxis().setLabelCount(4, false);
         chart.animateX(2500);
+        chart.notifyDataSetChanged();
+        chart.invalidate();
     }
 
     private LineData getData(List<Entry> values) {
@@ -165,7 +180,6 @@ public class forcast extends AppCompatActivity {
 
         return true;
     }
-
     public void forcastUnits(View view){
         AlertDialog.Builder builder = new AlertDialog.Builder(forcast.this);
         builder.setMessage("Processing...")
@@ -173,12 +187,12 @@ public class forcast extends AppCompatActivity {
         dialog2 = builder.create();
         dialog2.show();
 
-        nWeeks = Integer.parseInt(weeks.getText().toString());
+        nWeeks = (int)weeks.getSelectedItemId() +1;
         SharedPreferences sharePref = PreferenceManager.getDefaultSharedPreferences(this);
         code = sharePref.getString("code",null);
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-            String URL = "http://34.207.70.88:5000/forcastGAP";
+            String URL = getString(R.string.SEMSserver)+"forcastGAP";
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("fname", code);
             jsonBody.put("weeks", nWeeks);
@@ -194,18 +208,19 @@ public class forcast extends AppCompatActivity {
                     try {
                         List<Entry> listObjects = new ArrayList<Entry>();
                         JSONArray jsonArray = new JSONArray(response);
+                        double z=1;
                         for (int i=0; i < jsonArray.length(); i++) {
                             double x=0;
                             JSONArray arr=jsonArray.getJSONArray(i);
                             for (int j=0; j < arr.length(); j++) {
                                 x =arr.getDouble(j);
-                                x=x+x;
+                                float xval=(float) z;
+                                float yval=(float) x;
+                                Entry entry = new Entry(xval, yval);
+                                listObjects.add(entry);
+                                z++;
                             }
                             Log.i("SRA", arr.toString());
-                            float xval=(float) i;
-                            float yval=(float) x;
-                            Entry entry = new Entry(xval, yval);
-                            listObjects.add(entry);
                         }
                         LineData data = getData(listObjects);
                         data.setValueTypeface(mTf);
@@ -250,6 +265,16 @@ public class forcast extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+
+    public static String getNextDate(int  x) {
+        final SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+        Date date=java.util.Calendar.getInstance().getTime();
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_YEAR, x);
+        return format.format(calendar.getTime());
     }
 
 }
