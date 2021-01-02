@@ -71,7 +71,7 @@ public class dash extends AppCompatActivity {
         uni2=findViewById(R.id.unit2);
         uni3=findViewById(R.id.unit3);
         uname=findViewById(R.id.name);
-        profileview=findViewById(R.id.profile);
+        profileview=findViewById(R.id.myProfileView);
         snumber=findViewById(R.id.sno);
         userPic=(ImageView)findViewById(R.id.upic);
 
@@ -128,7 +128,7 @@ public class dash extends AppCompatActivity {
     }
 
     public void goForecastView(View view){
-        Intent forecast=new Intent(this, forcast.class);
+        Intent forecast=new Intent(this, Test.class);
         startActivity(forecast);
 
     }

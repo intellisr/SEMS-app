@@ -154,7 +154,6 @@ public class controll extends AppCompatActivity {
             String URL = getString(R.string.SEMSserver)+"anamaly";
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("fname", code);
-            jsonBody.put("user", uid);
             final String requestBody = jsonBody.toString();
 
             StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {

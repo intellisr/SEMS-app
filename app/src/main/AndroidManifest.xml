@@ -12,14 +12,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Notification"></activity>
+        <activity android:name=".Test"></activity>
+        <activity android:name=".Notification" />
 
         <service
             android:name=".NotifyService"
             android:enabled="true"
-            android:exported="true">
-
-        </service>
+            android:exported="true"></service>
 
         <activity android:name=".controll" />
         <activity android:name=".first" />

@@ -196,7 +196,6 @@ public class forcast extends AppCompatActivity {
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("fname", code);
             jsonBody.put("weeks", nWeeks);
-            jsonBody.put("user", uid);
             final String requestBody = jsonBody.toString();
 
             StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
