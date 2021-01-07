@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">SEMS-app</string>
-    <string name="SEMSserver" translatable="false">http://34.207.70.88:5000/</string>
+    <string name="SEMSserver" translatable="false">http://3.82.223.56:5000/</string>
     <string-array name="basicArray">
         <item>0</item>
         <item>1</item>

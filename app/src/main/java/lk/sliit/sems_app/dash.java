@@ -128,7 +128,7 @@ public class dash extends AppCompatActivity {
     }
 
     public void goForecastView(View view){
-        Intent forecast=new Intent(this, Test.class);
+        Intent forecast=new Intent(this, forcast.class);
         startActivity(forecast);
 
     }

@@ -5,6 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -23,6 +27,7 @@ public class first extends AppCompatActivity {
     public FirebaseAuth mAuth;
     private TextView snumber;
     public String uid;
+    public GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,14 @@ public class first extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Paired");
         databaseReference2 = firebaseDatabase.getReference("Switch");
+
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        // Build a GoogleSignInClient with the options specified by gso.
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
     }
 
@@ -59,5 +72,12 @@ public class first extends AppCompatActivity {
         Intent dash=new Intent(this, dash.class);
         startActivity(dash);
         finish();
+    }
+
+    public void signOut(View view){
+        mAuth.signOut();
+        mGoogleSignInClient.signOut();
+        Intent intent=new Intent(this,MainActivity.class);
+        startActivity(intent);
     }
 }
