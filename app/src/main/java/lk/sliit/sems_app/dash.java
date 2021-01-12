@@ -30,17 +30,13 @@ import org.json.JSONObject;
 
 public class dash extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();;
     public FirebaseDatabase firebaseDatabase;
     public DatabaseReference databaseReference;
     public DatabaseReference databaseReferenceUnits;
-    public DatabaseReference databaseReference2;
-    public DatabaseReference databaseReferencecode;
     public String proPic;
     public String name;
     public String uid;
     public FirebaseAuth mAuth;
-    public Boolean isPaired;
     private TextView uni1;
     private TextView uni2;
     private TextView uni3;
@@ -134,8 +130,8 @@ public class dash extends AppCompatActivity {
     }
 
     public void goPowerProfilingview(View view){
-        Intent forecast=new Intent(this, powerpro.class);
-        startActivity(forecast);
+        Intent powerpro=new Intent(this, powerpro.class);
+        startActivity(powerpro);
 
     }
 

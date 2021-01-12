@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Spinner;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -38,6 +38,14 @@ public class powerpro extends AppCompatActivity {
     Spinner incomeSpin;
     Spinner districtSpin;
     Spinner sizeSpin;
+    EditText Airconx;
+    EditText Fanx;
+    EditText microx;
+    EditText tvx;
+    EditText refigx;
+    EditText ironx;
+    EditText geysx;
+    EditText washx;
 
     public FirebaseAuth mAuth;
     public FirebaseDatabase firebaseDatabase;
@@ -103,6 +111,15 @@ public class powerpro extends AppCompatActivity {
         adapter9.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sizeSpin.setAdapter(adapter9);
 
+         Airconx = findViewById(R.id.aircon);
+         Fanx= findViewById(R.id.fan);
+         microx= findViewById(R.id.Microwaves);
+         tvx= findViewById(R.id.tv);
+         refigx= findViewById(R.id.Refrigerators);
+         ironx= findViewById(R.id.iron);
+         geysx= findViewById(R.id.geysers);
+         washx= findViewById(R.id.wash);
+
     }
 
 
@@ -117,14 +134,14 @@ public class powerpro extends AppCompatActivity {
         int income=(int)incomeSpin.getSelectedItemId();
         int district=(int)districtSpin.getSelectedItemId();
         int size=(int)sizeSpin.getSelectedItemId();
-        int Aircon=0;
-        int Fan=0;
-        int micro=0;
-        int tv=0;
-        int refig=0;
-        int iron=0;
-        int geys=0;
-        int wash=0;
+        int Aircon=Integer.parseInt(Airconx.getText().toString());
+        int Fan=Integer.parseInt(Fanx.getText().toString());
+        int micro=Integer.parseInt(microx.getText().toString());
+        int tv=Integer.parseInt(tvx.getText().toString());
+        int refig=Integer.parseInt(refigx.getText().toString());
+        int iron=Integer.parseInt(ironx.getText().toString());
+        int geys=Integer.parseInt(geysx.getText().toString());
+        int wash=Integer.parseInt(washx.getText().toString());
 
 
         Home myhome = new Home(solar, maleCount, femaleCount, childCount, adultCount, empCount, income, district, size, Aircon, Fan, micro, tv, refig, iron, geys, wash);
@@ -164,7 +181,7 @@ public class powerpro extends AppCompatActivity {
                     Log.i("VOLLEY", response);
                     double num = Double.parseDouble(response);
                     result=(int)num;
-                    if(result == 1){
+                    if(result == 0){
                         profile="Low Profile";
                         units="0 - 160.5 Units";
                     }else if(result == 2){
@@ -228,14 +245,14 @@ public class powerpro extends AppCompatActivity {
         int income=(int)incomeSpin.getSelectedItemId();
         int district=(int)districtSpin.getSelectedItemId();
         int size=(int)sizeSpin.getSelectedItemId();
-        int Aircon=0;
-        int Fan=0;
-        int micro=0;
-        int tv=0;
-        int refig=0;
-        int iron=0;
-        int geys=0;
-        int wash=0;
+        int Aircon=Integer.parseInt(Airconx.getText().toString());
+        int Fan=Integer.parseInt(Fanx.getText().toString());
+        int micro=Integer.parseInt(microx.getText().toString());
+        int tv=Integer.parseInt(tvx.getText().toString());
+        int refig=Integer.parseInt(refigx.getText().toString());
+        int iron=Integer.parseInt(ironx.getText().toString());
+        int geys=Integer.parseInt(geysx.getText().toString());
+        int wash=Integer.parseInt(washx.getText().toString());
 
 
 
@@ -250,7 +267,7 @@ public class powerpro extends AppCompatActivity {
             jsonBody.put("adult", adultCount);
             jsonBody.put("emp", empCount);
             jsonBody.put("income", income);
-            jsonBody.put("district", maleCount);
+            jsonBody.put("district", district);
             jsonBody.put("size", size);
             jsonBody.put("aircon", Aircon);//aircon
             jsonBody.put("fan", Fan);//fan
@@ -268,7 +285,7 @@ public class powerpro extends AppCompatActivity {
                     Log.i("VOLLEY", response);
                     double num = Double.parseDouble(response);
                     result=(int)num;
-                    if(result == 1){
+                    if(result == 0){
                         profile="Law Profile";
                         units="0 - 160.5 Units";
                     }else if(result == 2){

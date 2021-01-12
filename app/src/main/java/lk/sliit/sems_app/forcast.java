@@ -69,24 +69,13 @@ public class forcast extends AppCompatActivity {
     public String code;
     public FirebaseAuth mAuth;
     public String uid;
-    public FirebaseDatabase firebaseDatabase;
-    public DatabaseReference databaseReference;
-    public DatabaseReference databaseReferencechild;
-    public DatabaseReference databaseReferenc2;
-    public DatabaseReference databaseReferencechild2;
-    public List<Double> daydata;
-    public List<String> Entrydata;
     public AlertDialog dialog2;
-    public int timeState = 0;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forcast);
-
-         daydata = new ArrayList<Double>();
-         Entrydata = new ArrayList<String>();
 
         chart = findViewById(R.id.chart1);
         mAuth= FirebaseAuth.getInstance();
@@ -201,7 +190,6 @@ public class forcast extends AppCompatActivity {
             StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    Log.i("VOLLEY", response);
                     dialog2.hide();
                     mTf = Typeface.createFromAsset(getAssets(), "OpenSans-Bold.ttf");
                     try {
@@ -219,7 +207,6 @@ public class forcast extends AppCompatActivity {
                                 listObjects.add(entry);
                                 z++;
                             }
-                            Log.i("SRA", arr.toString());
                         }
                         LineData data = getData(listObjects);
                         data.setValueTypeface(mTf);
@@ -227,7 +214,7 @@ public class forcast extends AppCompatActivity {
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Log.i("SRA", e.toString());
+                        Log.i("VOLLEY", e.toString());
                     }
 
                 }
